@@ -1,0 +1,26 @@
+async-timeout==4.0.3
+asyncpg==0.29.0
+greenlet==3.0.1
+SQLAlchemy==2.0.23
+typing_extensions==4.8.0
+
+fastapi==0.100.1
+pydantic==2.4.2
+pydantic-settings==2.0.3
+python-dotenv==1.0.0
+redis==5.0.1
+uvicorn==0.23.2
+Werkzeug==3.0.1
+async-fastapi-jwt-auth==0.6.1
+
+psycopg2==2.9.9
+
+# зависимости из пакета "typer[all]" (pip install "typer[all]")
+markdown-it-py==3.0.0 
+mdurl==0.1.2 
+pygments==2.17.2 
+rich==13.7.0 
+shellingham==1.5.4 
+typer==0.9.0
+
+alembic==1.13.0

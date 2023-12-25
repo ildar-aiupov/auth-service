@@ -1,0 +1,55 @@
+version: '3'
+
+volumes:
+  pg_data:
+
+services:
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  fastapi:
+    build:
+      context: .
+    container_name: fastapi
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "createsuperuser.py", "admin", "admin" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    build: ./nginx/
+    container_name: nginx
+    env_file: .env
+    ports:
+      - 80:80
+    depends_on:
+      fastapi:
+        condition: service_healthy
